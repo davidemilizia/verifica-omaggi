@@ -70,4 +70,5 @@ def extract_transaction_comments(block):
 
         row_text = " ".join(values)
 
-        if "Transaction Comments" in
+if "Transaction Comments" in row_text:
+
