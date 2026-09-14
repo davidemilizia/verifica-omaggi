@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-st.title("Debug XLS")
+st.title("Analisi struttura report")
 
 file = st.file_uploader(
     "Carica report",
@@ -10,20 +10,35 @@ file = st.file_uploader(
 
 if file:
 
-    try:
+    df = pd.read_excel(
+        file,
+        header=None
+    )
 
-        df = pd.read_excel(
-            file,
-            header=None
+    st.success("File letto correttamente")
+
+    ricerca = st.text_input(
+        "Cerca testo",
+        value="Omaggio"
+    )
+
+    if ricerca:
+
+        mask = df.astype(str).apply(
+            lambda col: col.str.contains(
+                ricerca,
+                case=False,
+                na=False
+            )
         )
 
-        st.success("File letto correttamente")
+        risultati = df[mask.any(axis=1)]
 
-        st.write("Righe:", len(df))
-        st.write("Colonne:", len(df.columns))
+        st.write(
+            f"Righe trovate: {len(risultati)}"
+        )
 
-        st.dataframe(df.head(50))
-
-    except Exception as e:
-
-        st.error(str(e))
+        st.dataframe(
+            risultati,
+            use_container_width=True
+        )
