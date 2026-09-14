@@ -129,7 +129,107 @@ def save_config(config):
             indent=4,
             ensure_ascii=False
         )
+EXCLUDED_USERS = {
+    "CELL",
+    "WEB",
+    "Machine Vending"
+}
 
+
+def analyze_users(df, config):
+
+    results = []
+
+    user_rows = []
+
+    for idx, row in df.iterrows():
+
+        row_values = [
+            str(x).strip()
+            for x in row.values
+            if pd.notna(x)
+        ]
+
+        if "User:" in row_values:
+
+            try:
+                user = str(row[8]).strip()
+
+                user_rows.append(
+                    (idx, user)
+                )
+
+            except:
+                pass
+
+    for pos, (start_row, user) in enumerate(user_rows):
+
+        if user in EXCLUDED_USERS:
+            continue
+
+        if pos < len(user_rows) - 1:
+            end_row = user_rows[pos + 1][0]
+        else:
+            end_row = len(df)
+
+        block = df.iloc[start_row:end_row]
+
+        omaggi_da_commentare = 0
+        transaction_comments = 0
+
+        for _, row in block.iterrows():
+
+            values = [
+                str(x).strip()
+                for x in row.values
+                if pd.notna(x)
+            ]
+
+            row_text = " ".join(values)
+
+            if "Transaction Comments" in row_text:
+
+                for value in values:
+
+                    if value.isdigit():
+
+                        transaction_comments = int(value)
+
+                        break
+
+            for value in values:
+
+                if "Omaggio" not in value:
+                    continue
+
+                gift = " ".join(value.split())
+
+                if config.get(gift) is True:
+
+                    omaggi_da_commentare += 1
+
+        diff = (
+            transaction_comments
+            - omaggi_da_commentare
+        )
+
+        if diff == 0:
+            esito = "✅ OK"
+        elif diff > 0:
+            esito = f"⚠️ +{diff} commenti"
+        else:
+            esito = f"❌ Mancano {abs(diff)}"
+
+        results.append({
+            "User": user,
+            "Omaggi da commentare":
+                omaggi_da_commentare,
+            "Transaction Comments":
+                transaction_comments,
+            "Esito": esito
+        })
+
+    return pd.DataFrame(results)
 
 st.set_page_config(
     page_title="Verifica Omaggi",
