@@ -242,33 +242,71 @@ if uploaded_file:
         results_df,
         use_container_width=True
     )
+# =====================================
+# CONFIGURAZIONE OMAGGI
+# =====================================
 
-    if len(new_gifts) > 0:
+st.subheader("⚙️ Configurazione Omaggi")
 
-        st.subheader(
-            "⚠️ Nuove tipologie omaggio"
+updated_config = {}
+
+for gift in sorted(config.keys()):
+
+    valore_corrente = (
+        config[gift]
+        if config[gift] is not None
+        else False
+    )
+
+    updated_config[gift] = st.checkbox(
+        gift,
+        value=valore_corrente,
+        key=f"cfg_{gift}"
+    )
+
+if st.button("💾 Salva Configurazione"):
+
+    save_config(updated_config)
+
+    config = updated_config
+
+    st.success(
+        "Configurazione salvata"
+    )
+
+
+# =====================================
+# NUOVI OMAGGI
+# =====================================
+
+if len(new_gifts) > 0:
+
+    st.subheader(
+        "🆕 Nuove tipologie omaggio"
+    )
+
+    for gift in sorted(new_gifts):
+
+        scelta = st.radio(
+            gift,
+            [
+                "Richiede commento",
+                "Non richiede commento"
+            ],
+            key=f"new_{gift}"
         )
 
-        for gift in sorted(new_gifts):
+        config[gift] = (
+            scelta == "Richiede commento"
+        )
 
-            value = st.radio(
-                f"{gift}",
-                ["SI", "NO"],
-                horizontal=True,
-                key=gift
-            )
+    if st.button(
+        "➕ Salva Nuove Tipologie"
+    ):
 
-            if value == "SI":
-                config[gift] = True
-            else:
-                config[gift] = False
+        save_config(config)
 
-        if st.button(
-            "💾 Salva Nuove Regole"
-        ):
-
-            save_config(config)
-
-            st.success(
-                "Regole salvate"
-            )
+        st.success(
+            "Nuove tipologie salvate"
+        )
+  
