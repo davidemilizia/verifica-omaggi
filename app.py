@@ -90,20 +90,20 @@ if uploaded_file:
 
         omaggi_trovati = set()
 
-        for _, row in df.iterrows():
+             for _, row in df.iterrows():
 
-            for value in row.values:
+                for value in row.values:
+    
+                    if pd.isna(value):
+                        continue
 
-                if pd.isna(value):
-                    continue
+                    text = str(value).strip()
 
-                text = str(value).strip()
+                    if "Omaggio" in text:
 
-               if "Omaggio" in text:
+                        text = " ".join(text.split())
 
-                    text = " ".join(text.split())
-
-                    omaggi_trovati.add(text)
+                        omaggi_trovati.add(text)
     
         st.subheader("🎁 Omaggi trovati")
 
