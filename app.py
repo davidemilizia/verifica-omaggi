@@ -122,16 +122,17 @@ if uploaded_file:
                 "Nessun omaggio trovato"
             )
 
-        else:
+               else:
 
             for gift in sorted(omaggi_trovati):
 
                 st.write("•", gift)
-                # -----------------------
+
+        # -----------------------
         # NUOVE TIPOLOGIE
         # -----------------------
 
-                nuovi_omaggi = [
+        nuovi_omaggi = [
             gift
             for gift in omaggi_trovati
             if gift not in config
