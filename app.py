@@ -1,23 +1,30 @@
 import streamlit as st
+import pandas as pd
 
-st.title("Debug Report")
+st.title("Debug XLS")
 
 file = st.file_uploader(
-    "Carica file",
+    "Carica report",
     type=["xls"]
 )
 
 if file:
 
-    content = file.read()
+    try:
 
-    text = content.decode(
-        "utf-8",
-        errors="ignore"
-    )
+        df = pd.read_excel(
+            file,
+            header=None,
+            engine="xlrd"
+        )
 
-    st.write("Dimensione file:", len(text))
+        st.success("File letto correttamente")
 
-    st.subheader("Prime 5000 lettere")
+        st.write("Righe:", len(df))
+        st.write("Colonne:", len(df.columns))
 
-    st.text(text[:5000])
+        st.dataframe(df.head(50))
+
+    except Exception as e:
+
+        st.error(str(e))
