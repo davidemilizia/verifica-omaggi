@@ -1,74 +1,149 @@
+
 import streamlit as st
 import pandas as pd
 import json
-from collections import defaultdict
 
 CONFIG_FILE = "omaggi_config.json"
 
-EXCLUDED_USERS = {
-    "CELL",
-    "WEB",
-    "Machine Vending"
-}
 
+# -----------------------
+# CONFIG
+# -----------------------
 
 def load_config():
     try:
         with open(CONFIG_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
-    except:
+    except Exception:
         return {}
 
 
-def save_config(data):
+def save_config(config):
     with open(CONFIG_FILE, "w", encoding="utf-8") as f:
         json.dump(
-            data,
+            config,
             f,
             indent=4,
             ensure_ascii=False
         )
 
 
-def find_user_rows(df):
+# -----------------------
+# UI
+# -----------------------
 
-    rows = []
+st.set_page_config(
+    page_title="Verifica Omaggi",
+    layout="wide"
+)
 
-    for idx in df.index:
+st.title("🎟️ Verifica Omaggi")
 
-        row = df.loc[idx]
+# -----------------------
+# CONFIGURAZIONE
+# -----------------------
 
-        for col in df.columns:
+config = load_config()
 
-            value = str(row[col]).strip()
+st.subheader("⚙️ Configurazione Omaggi")
 
-            if value == "User:":
+if len(config) == 0:
+    st.info(
+        "Nessun omaggio configurato."
+    )
 
-                user = str(row[8]).strip()
+updated_config = {}
 
-                rows.append({
-                    "row": idx,
-                    "user": user
-                })
+for gift in sorted(config.keys()):
 
-                break
+    updated_config[gift] = st.checkbox(
+        gift,
+        value=bool(config[gift]),
+        key=f"cfg_{gift}"
+    )
 
-    return rows
+if st.button("💾 Salva Configurazione"):
 
+    save_config(updated_config)
 
-def extract_transaction_comments(block):
+    st.success(
+        "Configurazione salvata"
+    )
 
-    comments = 0
+st.divider()
 
-    for _, row in block.iterrows():
+# -----------------------
+# UPLOAD REPORT
+# -----------------------
 
-        values = [
-            str(x)
-            for x in row.values
-            if pd.notna(x)
+uploaded_file = st.file_uploader(
+    "Carica report Vista",
+    type=["xls"]
+)
+
+if uploaded_file:
+
+    try:
+
+        df = pd.read_excel(
+            uploaded_file,
+            header=None
+        )
+
+        st.success(
+            f"Report letto correttamente - "
+            f"{len(df)} righe"
+        )
+
+        # -----------------------
+        # CERCA OMAGGI
+        # -----------------------
+
+        omaggi_trovati = set()
+
+        for _, row in df.iterrows():
+
+            for value in row.values:
+
+                if pd.isna(value):
+                    continue
+
+                text = str(value).strip()
+
+                if "Omaggio" in text:
+
+                    omaggi_trovati.add(text)
+
+        st.subheader("🎁 Omaggi trovati")
+
+        if not omaggi_trovati:
+
+            st.warning(
+                "Nessun omaggio trovato"
+            )
+
+        else:
+
+            for gift in sorted(omaggi_trovati):
+
+                st.write("•", gift)
+
+        # -----------------------
+        # NUOVE TIPOLOGIE
+        # -----------------------
+
+        nuovi_omaggi = [
+            gift
+            for gift in omaggi_trovati
+            if gift not in config
         ]
 
-        row_text = " ".join(values)
+        if nuovi_omaggi:
 
-if "Transaction Comments" in row_text:
+            st.subheader(
+                "🆕 Nuove tipologie omaggio"
+            )
 
+            for gift in sorted(nuovi_omaggi):
+
+   
