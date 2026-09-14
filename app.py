@@ -12,10 +12,11 @@ if file:
 
     try:
 
-df = pd.read_excel(
-    file,
-    header=None
-)
+        df = pd.read_excel(
+            file,
+            header=None
+        )
+
         st.success("File letto correttamente")
 
         st.write("Righe:", len(df))
