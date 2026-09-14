@@ -123,17 +123,16 @@ if uploaded_file:
         # NUOVE TIPOLOGIE
         # -----------------------------------------
 
-     config_norm = {
+        config_norm = {
             k.strip(): v
-        for k, v in config.items()
-    }
+            for k, v in config.items()
+        }
 
-    nuovi_omaggi = [
-        gift
-        for gift in omaggi_trovati
-        if gift.strip() not in config_norm
-    ]
-
+        nuovi_omaggi = [
+            gift
+            for gift in omaggi_trovati
+            if gift.strip() not in config_norm
+        ]
 
         if nuovi_omaggi:
 
