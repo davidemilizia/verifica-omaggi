@@ -127,8 +127,7 @@ if uploaded_file:
             for gift in sorted(omaggi_trovati):
 
                 st.write("•", gift)
-
-        # -----------------------
+                # -----------------------
         # NUOVE TIPOLOGIE
         # -----------------------
 
@@ -138,33 +137,33 @@ if uploaded_file:
             if gift not in config
         ]
 
-       if nuovi_omaggi:
+        if nuovi_omaggi:
 
-        st.subheader(
-        "🆕 Nuove tipologie omaggio"
-        )
-
-        for gift in sorted(nuovi_omaggi):
-
-            scelta = st.radio(
-                gift,
-                [
-                    "Richiede commento",
-                    "Non richiede commento"
-                ],
-                key=f"new_{gift}"
+            st.subheader(
+                "🆕 Nuove tipologie omaggio"
             )
 
-            config[gift] = (
-                scelta == "Richiede commento"
-            )
+            for gift in sorted(nuovi_omaggi):
 
-        if st.button(
-            "➕ Salva Nuove Tipologie"
-        ):
+                scelta = st.radio(
+                    gift,
+                    [
+                        "Richiede commento",
+                        "Non richiede commento"
+                    ],
+                    key=f"new_{gift}"
+                )
 
-            save_config(config)
+                config[gift] = (
+                    scelta == "Richiede commento"
+                )
 
-            st.success(
-                "Nuove tipologie salvate"
-            )
+            if st.button(
+                "➕ Salva Nuove Tipologie"
+            ):
+
+                save_config(config)
+
+                st.success(
+                    "Nuove tipologie salvate"
+                )
