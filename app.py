@@ -35,7 +35,8 @@ st.title("🎟️ Verifica Omaggi")
 # -------------------------------------------------
 
 config = load_config()
-
+st.write("CONFIG LETTA:")
+st.write(config)
 st.subheader("⚙️ Configurazione Omaggi")
 
 if config:
