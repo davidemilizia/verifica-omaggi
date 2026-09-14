@@ -99,10 +99,12 @@ if uploaded_file:
 
                 text = str(value).strip()
 
-                if "Omaggio" in text:
+               if "Omaggio" in text:
+
+                    text = " ".join(text.split())
 
                     omaggi_trovati.add(text)
-
+    
         st.subheader("🎁 Omaggi trovati")
 
         if not omaggi_trovati:
