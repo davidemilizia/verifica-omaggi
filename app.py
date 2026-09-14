@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-st.title("Analisi struttura report")
+st.title("Verifica Omaggi - Analisi")
 
 file = st.file_uploader(
     "Carica report",
@@ -15,30 +15,18 @@ if file:
         header=None
     )
 
-    st.success("File letto correttamente")
-
-    ricerca = st.text_input(
-        "Cerca testo",
-        value="Omaggio"
-    )
-
-    if ricerca:
-
-        mask = df.astype(str).apply(
+    utenti = df[
+        df.astype(str).apply(
             lambda col: col.str.contains(
-                ricerca,
-                case=False,
+                "User:",
                 na=False
             )
-        )
+        ).any(axis=1)
+    ]
 
-        risultati = df[mask.any(axis=1)]
+    st.subheader("Righe User")
 
-        st.write(
-            f"Righe trovate: {len(risultati)}"
-        )
-
-        st.dataframe(
-            risultati,
-            use_container_width=True
-        )
+    st.dataframe(
+        utenti,
+        use_container_width=True
+    )
