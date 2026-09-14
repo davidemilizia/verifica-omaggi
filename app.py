@@ -277,7 +277,19 @@ if uploaded_file:
                 st.success(
                     "Nuove tipologie salvate"
                 )
+        st.divider()
 
+        st.subheader("📊 Controllo Utenti")
+
+        users_df = analyze_users(
+            df,
+            config
+        )
+
+        st.dataframe(
+            users_df,
+            use_container_width=True
+        )
     except Exception as e:
 
         st.error(str(e))
