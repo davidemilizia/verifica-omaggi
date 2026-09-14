@@ -138,35 +138,33 @@ if uploaded_file:
             if gift not in config
         ]
 
-        if nuovi_omaggi:
+       if nuovi_omaggi:
 
-            st.subheader(
-                "🆕 Nuove tipologie omaggio"
-            )
+    st.subheader(
+        "🆕 Nuove tipologie omaggio"
+    )
 
-           for gift in sorted(nuovi_omaggi):
+    for gift in sorted(nuovi_omaggi):
 
-            scelta = st.radio(
-                gift,
-                [
-                    "Richiede commento",
-                    "Non richiede commento"
-                ],
-                key=f"new_{gift}"
-            )
+        scelta = st.radio(
+            gift,
+            [
+                "Richiede commento",
+                "Non richiede commento"
+            ],
+            key=f"new_{gift}"
+        )
 
-            config[gift] = (
-                scelta == "Richiede commento"
-            )
+        config[gift] = (
+            scelta == "Richiede commento"
+        )
 
+    if st.button(
+        "➕ Salva Nuove Tipologie"
+    ):
 
-        if st.button(
-            "➕ Salva Nuove Tipologie"
-        ):
+        save_config(config)
 
-            save_config(config)
-
-            st.success(
-                "Nuove tipologie salvate"
-            )
-   
+        st.success(
+            "Nuove tipologie salvate"
+        )
