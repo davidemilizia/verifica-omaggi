@@ -129,13 +129,6 @@ def save_config(config):
             indent=4,
             ensure_ascii=False
         )
-EXCLUDED_USERS = {
-    "CELL",
-    "WEB",
-    "Machine Vending"
-}
-
-
 
 st.set_page_config(
     page_title="Verifica Omaggi",
