@@ -8,12 +8,12 @@ CONFIG_FILE = "omaggi_config.json"
 def load_config():
     try:
         with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-
+            content = f.read().strip()
+            if not content:
+                return {}
+            return json.loads(content)
     except Exception as e:
-
         st.error(f"Errore lettura JSON: {e}")
-
         return {}
 
 
