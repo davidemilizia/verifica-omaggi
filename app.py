@@ -145,5 +145,26 @@ if uploaded_file:
             )
 
             for gift in sorted(nuovi_omaggi):
+            scelta = st.radio(
+                gift,
+                [
+                    "Richiede commento",
+                    "Non richiede commento"
+                ],
+                key=f"new_{gift}"
+            )
 
+            config[gift] = (
+                scelta == "Richiede commento"
+            )
+
+        if st.button(
+            "➕ Salva Nuove Tipologie"
+        ):
+
+            save_config(config)
+
+            st.success(
+                "Nuove tipologie salvate"
+            )
    
