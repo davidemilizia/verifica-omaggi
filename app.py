@@ -144,19 +144,20 @@ if uploaded_file:
                 "🆕 Nuove tipologie omaggio"
             )
 
-            for gift in sorted(nuovi_omaggi):
-                 scelta = st.radio(
-            gift,
-            [
-                "Richiede commento",
-                "Non richiede commento"
-            ],
-            key=f"new_{gift}"
-        )
+           for gift in sorted(nuovi_omaggi):
 
-        config[gift] = (
-            scelta == "Richiede commento"
-        )
+            scelta = st.radio(
+                gift,
+                [
+                    "Richiede commento",
+                    "Non richiede commento"
+                ],
+                key=f"new_{gift}"
+            )
+
+            config[gift] = (
+                scelta == "Richiede commento"
+            )
 
 
         if st.button(
